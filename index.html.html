@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>INDVZL — Video Editor</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --black: #0E0A1F;
+    --white: #ffffff;
+    --gray-light: #EDE8F7;
+    --gray-mid: #8B7BAA;
+    --gray-dark: #5A4A7A;
+    --accent: #6610F2;
+    --accent-deep: #4B0082;
+    --accent-light: #EDE8F7;
+    --gold: #F5E6C8;
+    --gold-dark: #C9A84C;
+    --serif: 'DM Serif Display', serif;
+    --sans: 'DM Sans', sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--sans);
+    background: var(--white);
+    color: var(--black);
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 4rem;
+    background: rgba(255, 255, 255, 0.96);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--gray-light);
+  }
+
+  .nav-logo {
+    font-family: var(--serif);
+    font-size: 1.5rem;
+    letter-spacing: 0.08em;
+    color: var(--black);
+    text-decoration: none;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2.5rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 400;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gray-dark);
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--black); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding-top: 80px;
+    background: var(--white);
+  }
+
+  .hero-left {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 4rem 4rem 4rem 4rem;
+    max-width: 820px;
+  }
+
+  .hero-tag {
+    font-size: 0.75rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold-dark);
+    font-weight: 500;
+    margin-bottom: 1.5rem;
+  }
+
+  .hero-title {
+    font-family: var(--serif);
+    font-size: clamp(3.5rem, 6vw, 5.5rem);
+    line-height: 1.05;
+    color: var(--black);
+    margin-bottom: 1.5rem;
+  }
+
+  .hero-title em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .hero-sub {
+    font-size: 1.05rem;
+    color: var(--gray-dark);
+    max-width: 620px;
+    line-height: 1.75;
+    margin-bottom: 2.5rem;
+    font-weight: 300;
+  }
+
+  .hero-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: var(--accent);
+    color: var(--white);
+    text-decoration: none;
+    padding: 0.9rem 2rem;
+    font-size: 0.85rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 500;
+    transition: background 0.2s, transform 0.2s;
+  }
+
+  .hero-cta:hover {
+    background: var(--accent-deep);
+    transform: translateY(-2px);
+  }
+
+  .hero-cta svg { width: 16px; height: 16px; }
+
+
+  .hero-scroll-hint {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--gray-mid);
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+
+  .scroll-line {
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(to bottom, var(--gray-mid), transparent);
+    animation: scrollAnim 2s ease-in-out infinite;
+  }
+
+  @keyframes scrollAnim {
+    0%, 100% { opacity: 0.3; transform: scaleY(1); }
+    50% { opacity: 1; transform: scaleY(1.2); }
+  }
+
+  /* SECTION SHARED */
+  section { padding: 5rem 4rem; }
+
+  .section-label {
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold-dark);
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+  }
+
+  .section-title {
+    font-family: var(--serif);
+    font-size: clamp(2rem, 4vw, 3rem);
+    line-height: 1.1;
+    margin-bottom: 0;
+  }
+
+  /* ABOUT */
+  .about {
+    background: var(--black);
+    color: var(--white);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: center;
+  }
+
+  .about .section-title { color: var(--white); }
+
+  .about-body {
+    font-size: 1rem;
+    line-height: 1.85;
+    color: rgba(245,244,240,0.65);
+    font-weight: 300;
+    margin-bottom: 2rem;
+  }
+
+  .about-stats {
+    display: flex;
+    gap: 2.5rem;
+    margin-top: 2rem;
+  }
+
+  .stat-num {
+    font-family: var(--serif);
+    font-size: 2.2rem;
+    color: var(--gold);
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(245,244,240,0.4);
+    margin-top: 0.3rem;
+  }
+
+  .about-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+    align-content: flex-start;
+  }
+
+  .about-tag {
+    padding: 0.5rem 1rem;
+    border: 1px solid rgba(255,255,255,0.15);
+    font-size: 0.8rem;
+    letter-spacing: 0.06em;
+    color: rgba(255,255,255,0.75);
+    font-weight: 300;
+    transition: all 0.25s;
+  }
+
+  .about-tag:hover {
+    border-color: var(--gold-dark);
+    color: var(--gold);
+    background: rgba(201,168,76,0.08);
+  }
+
+  /* WORK */
+  .work { background: var(--white); }
+
+  .work-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 3.5rem;
+  }
+
+  .work-filter {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .filter-btn {
+    padding: 0.45rem 1.1rem;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border: 1px solid var(--gray-light);
+    background: transparent;
+    cursor: pointer;
+    color: var(--gray-dark);
+    font-family: var(--sans);
+    transition: all 0.2s;
+  }
+
+  .filter-btn:hover, .filter-btn.active {
+    background: var(--accent);
+    color: var(--white);
+    border-color: var(--accent);
+  }
+
+  .work-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.8rem;
+    align-items: stretch;
+  }
+
+  .work-item {
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    background: var(--black);
+    border: 1px solid rgba(102, 16, 242, 0.18);
+    transition: border-color 0.3s, box-shadow 0.3s;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .work-item:hover {
+    border-color: rgba(102, 16, 242, 0.6);
+    box-shadow: 0 0 28px rgba(102, 16, 242, 0.18);
+  }
+
+  /* Row 1: Café Promo (landscape, 2col) + Podcast Reel (vertical, 1col) */
+  /* Row 2: Event Promo (vertical, 1col) + Short Doc (landscape, 1col) + Music Video (landscape, 1col) */
+
+  .work-item.span2 { grid-column: span 2; }
+  .work-item.span1 { grid-column: span 1; }
+
+  .work-thumb {
+    background: #0E0A1F;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+  }
+
+  /* Fixed height for landscape items in row 1 */
+  .work-item.span2 .work-thumb { aspect-ratio: 16/9; flex: none; }
+
+  /* Vertical items — natural 9:16 */
+  .work-thumb.vertical { aspect-ratio: 9/16; flex: none; }
+
+  /* Row 2 landscape items stretch to fill height of the vertical neighbour */
+  .work-item.fill .work-thumb { aspect-ratio: unset; min-height: 200px; flex: 1; }
+
+  .work-thumb iframe {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    border: none;
+  }
+
+  /* Cover overlay — hides YouTube title bar, disappears on click to allow playback */
+  .thumb-cover {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    background: transparent;
+    cursor: pointer;
+  }
+
+  .thumb-cover.clicked { display: none; }
+
+  .work-item.featured .work-thumb { aspect-ratio: 16/9; }
+
+  .work-thumb-inner {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.5s ease;
+  }
+
+  .work-item:hover .work-thumb-inner { transform: scale(1.04); }
+
+  .thumb-gradient {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 0.3s;
+    background: linear-gradient(to top, rgba(14,10,31,0.95) 0%, transparent 60%);
+  }
+
+  .work-item:hover .thumb-gradient { opacity: 1; }
+
+  .thumb-icon {
+    width: 52px; height: 52px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transform: scale(0.8);
+    transition: all 0.3s;
+    background: rgba(102,16,242,0.25);
+    backdrop-filter: blur(4px);
+  }
+
+  .thumb-icon svg { width: 18px; height: 18px; fill: white; margin-left: 3px; }
+  .work-item:hover .thumb-icon { opacity: 1; transform: scale(1); }
+
+  .work-meta {
+    padding: 1.1rem 1.3rem;
+    background: var(--black);
+    border-top: 1px solid rgba(102, 16, 242, 0.15);
+  }
+
+  .work-cat {
+    font-size: 0.65rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold-dark);
+    margin-bottom: 0.3rem;
+  }
+
+  .work-name {
+    font-family: var(--serif);
+    font-size: 1.05rem;
+    color: var(--white);
+  }
+
+  .work-year {
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.3);
+    margin-top: 0.2rem;
+  }
+
+  /* SERVICES */
+  .services { background: var(--gray-light); }
+
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: #C4B8E0;
+    margin-top: 3.5rem;
+  }
+
+  .service-card {
+    background: var(--white);
+    padding: 2.5rem 2rem;
+    transition: background 0.3s;
+  }
+
+  .service-card:hover { background: var(--accent-deep); }
+  .service-card:hover .service-title { color: var(--white); }
+  .service-card:hover .service-desc { color: rgba(237,232,247,0.6); }
+  .service-card:hover .service-num { color: var(--gold); }
+
+  .service-num {
+    font-family: var(--serif);
+    font-size: 1.8rem;
+    color: var(--accent-light);
+    margin-bottom: 1.5rem;
+    transition: color 0.3s;
+  }
+
+  .service-title {
+    font-family: var(--serif);
+    font-size: 1.3rem;
+    margin-bottom: 0.75rem;
+    transition: color 0.3s;
+  }
+
+  .service-desc {
+    font-size: 0.9rem;
+    color: var(--gray-dark);
+    line-height: 1.75;
+    font-weight: 300;
+    transition: color 0.3s;
+  }
+
+  /* PROCESS */
+  .process { background: var(--white); }
+
+  .process-steps {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2rem;
+    margin-top: 3.5rem;
+    position: relative;
+  }
+
+  .process-steps::before {
+    content: '';
+    position: absolute;
+    top: 1.5rem;
+    left: 2rem;
+    right: 2rem;
+    height: 1px;
+    background: var(--gray-light);
+  }
+
+  .process-step {
+    position: relative;
+    padding-top: 0.75rem;
+  }
+
+  .step-dot {
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    background: var(--gold-dark);
+    margin-bottom: 1.5rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .step-num {
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gray-mid);
+    margin-bottom: 0.5rem;
+  }
+
+  .step-title {
+    font-family: var(--serif);
+    font-size: 1.15rem;
+    margin-bottom: 0.6rem;
+  }
+
+  .step-desc {
+    font-size: 0.88rem;
+    color: var(--gray-dark);
+    line-height: 1.7;
+    font-weight: 300;
+  }
+
+  /* CONTACT */
+  .contact {
+    background: var(--black);
+    color: var(--white);
+    text-align: center;
+    padding: 7rem 4rem;
+  }
+
+  .contact .section-label { justify-content: center; display: block; }
+  .contact .section-title { color: var(--white); max-width: 600px; margin: 0 auto 1.5rem; }
+
+  .contact-sub {
+    font-size: 1rem;
+    color: rgba(245,244,240,0.5);
+    max-width: 400px;
+    margin: 0 auto 2.5rem;
+    font-weight: 300;
+  }
+
+  .contact-links {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .contact-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.85rem 1.8rem;
+    font-size: 0.82rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    font-family: var(--sans);
+    font-weight: 500;
+    transition: all 0.2s;
+  }
+
+  .contact-link.primary {
+    background: var(--gold);
+    color: var(--accent-deep);
+  }
+
+  .contact-link.primary:hover { background: var(--gold-dark); color: var(--white); }
+
+  .contact-link.secondary {
+    border: 1px solid rgba(255,255,255,0.15);
+    color: rgba(245,244,240,0.7);
+  }
+
+  .contact-link.secondary:hover {
+    border-color: rgba(255,255,255,0.4);
+    color: var(--white);
+  }
+
+  /* FOOTER */
+  footer {
+    background: var(--black);
+    border-top: 1px solid rgba(255,255,255,0.06);
+    padding: 2rem 4rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: rgba(245,244,240,0.3);
+    font-size: 0.78rem;
+    letter-spacing: 0.06em;
+  }
+
+  .footer-logo {
+    font-family: var(--serif);
+    font-size: 1.1rem;
+    color: rgba(245,244,240,0.5);
+  }
+
+  /* ANIMATION */
+  .reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    nav { padding: 1.2rem 2rem; }
+    .nav-links { gap: 1.5rem; }
+    .hero { grid-template-columns: 1fr; }
+    .hero-left { padding: 5rem 2rem 3rem; max-width: 100%; }
+    section { padding: 3.5rem 2rem; }
+    .about, .services-grid, .process-steps { grid-template-columns: 1fr; }
+    .about { gap: 3rem; }
+    footer { flex-direction: column; gap: 0.5rem; text-align: center; }
+    .process-steps::before { display: none; }
+
+    /* Work grid: single column on mobile, all boxes full width */
+    .work-grid {
+      grid-template-columns: 1fr;
+      gap: 0.8rem;
+    }
+    .work-item.span2,
+    .work-item.span1 {
+      grid-column: span 1;
+    }
+    /* Landscape boxes: natural 16:9 */
+    .work-thumb { aspect-ratio: 16/9; }
+    /* Vertical boxes: cap height on mobile so they don't get too tall */
+    .work-thumb.vertical { aspect-ratio: 9/16; max-height: 480px; }
+
+    .work-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+    .work-filter { flex-wrap: wrap; gap: 0.4rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">INDVZL</a>
+  <ul class="nav-links">
+    <li><a href="#work">Work</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero" style="padding:0;">
+  <div class="hero-left">
+    <p class="hero-tag">Video Editor & Storyteller</p>
+    <h1 class="hero-title">Frames that<br><em>move</em><br>people.</h1>
+    <p class="hero-sub">I don't just edit footage — I shape how it feels. Every cut is a choice, every frame has a reason. I work with raw moments and turn them into something that lingers — whether it's a two-minute promo or a ten-minute short film.</p>
+    <a href="#work" class="hero-cta">
+      View Work
+      <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+    <div class="hero-scroll-hint">
+      <span>Scroll</span>
+      <div class="scroll-line"></div>
+    </div>
+  </div>
+</section>
+
+<!-- WORK -->
+<section class="work" id="work">
+  <div class="work-header reveal">
+    <div>
+      <p class="section-label">Selected Work</p>
+      <h2 class="section-title">Projects &amp; edits</h2>
+    </div>
+    <div class="work-filter">
+      <button class="filter-btn active" onclick="filterWork(this,'all')">All</button>
+      <button class="filter-btn" onclick="filterWork(this,'commercial')">Documentary</button>
+      <button class="filter-btn" onclick="filterWork(this,'social')">Podcast</button>
+      <button class="filter-btn" onclick="filterWork(this,'events')">Events & Promos</button>
+    </div>
+  </div>
+  <div class="work-grid reveal" id="workGrid">
+
+    <!-- ROW 1: Landscape (span 2) + Vertical (span 1) -->
+    <div class="work-item span2" data-cat="commercial">
+      <div class="work-thumb" style="background:#0E0A1F;">
+        <iframe src="https://www.youtube.com/embed/CiuWFx_7LRs?rel=0&modestbranding=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        <div class="thumb-cover" onclick="this.classList.add('clicked')"></div>
+      </div>
+      <div class="work-meta">
+        <p class="work-cat">Documentary</p>
+        <p class="work-name">Short Documentary</p>
+      </div>
+    </div>
+
+    <div class="work-item span1" data-cat="social">
+      <div class="work-thumb vertical" style="background:#150830;">
+        <iframe src="https://www.youtube.com/embed/BJBqKdCP9yk?rel=0&modestbranding=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        <div class="thumb-cover" onclick="this.classList.add('clicked')"></div>
+      </div>
+      <div class="work-meta">
+        <p class="work-cat">Social</p>
+        <p class="work-name">Podcast Reel</p>
+      </div>
+    </div>
+
+    <!-- ROW 2: Vertical (span 1) + Landscape (span 1) + Landscape (span 1) -->
+    <div class="work-item span1" data-cat="events">
+      <div class="work-thumb vertical">
+        <iframe src="https://www.youtube.com/embed/agjncctk9_g?rel=0&modestbranding=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        <div class="thumb-cover" onclick="this.classList.add('clicked')"></div>
+      </div>
+      <div class="work-meta">
+        <p class="work-cat">Events</p>
+        <p class="work-name">Event Promo</p>
+      </div>
+    </div>
+
+    <div class="work-item span1" data-cat="events">
+      <div class="work-thumb">
+        <iframe src="https://www.youtube.com/embed/DBAXbY5We7U?rel=0&modestbranding=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        <div class="thumb-cover" onclick="this.classList.add('clicked')"></div>
+      </div>
+      <div class="work-meta">
+        <p class="work-cat">Music</p>
+        <p class="work-name">Music Video</p>
+      </div>
+    </div>
+
+    <div class="work-item span1" data-cat="events">
+      <div class="work-thumb">
+        <iframe src="https://www.youtube.com/embed/GRblIVJWavY?rel=0&modestbranding=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        <div class="thumb-cover" onclick="this.classList.add('clicked')"></div>
+      </div>
+      <div class="work-meta">
+        <p class="work-cat">Commercial</p>
+        <p class="work-name">Café Promo</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <div class="reveal">
+    <p class="section-label">About</p>
+    <h2 class="section-title">Telling stories<br>through the cut.</h2>
+    <p class="about-body">
+      I'm not a corporate editor. I'm someone who genuinely loves what footage can become when you treat it with intention. Editing, for me, is about curation — finding the soul of a moment and letting it breathe on screen.
+    </p>
+    <p class="about-body">
+      Every project I've touched reflects my taste for media. Whether it's a music video, a short documentary, or a podcast reel — the work has always been personal, always been purposeful.
+    </p>
+    <div class="about-stats">
+      <div>
+        <div class="stat-num">50+</div>
+        <div class="stat-label">Projects</div>
+      </div>
+      <div>
+        <div class="stat-num">1+</div>
+        <div class="stat-label">Years exp.</div>
+      </div>
+      <div>
+        <div class="stat-num">∞</div>
+        <div class="stat-label">Frames cut</div>
+      </div>
+    </div>
+  </div>
+  <div class="reveal">
+    <p class="section-label" style="margin-bottom:1.5rem;">What I've worked on</p>
+    <div class="about-tags">
+      <span class="about-tag">Podcast Reels</span>
+      <span class="about-tag">Café Promotional Content</span>
+      <span class="about-tag">Short Documentary</span>
+      <span class="about-tag">Music Videos</span>
+      <span class="about-tag">Small Events</span>
+      <span class="about-tag">Highlight Videos</span>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="services" id="services">
+  <div class="reveal">
+    <p class="section-label">What I Do</p>
+    <h2 class="section-title">Services</h2>
+  </div>
+  <div class="services-grid reveal">
+    <div class="service-card">
+      <div class="service-num">01</div>
+      <h3 class="service-title">Promotional Videos</h3>
+      <p class="service-desc">Eye-catching promo content for cafés, restaurants, and small businesses — edited to grab attention and drive engagement.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-num">02</div>
+      <h3 class="service-title">Podcast Reels</h3>
+      <p class="service-desc">Punchy, shareable short-form clips cut from long podcast recordings — optimised for Instagram, YouTube Shorts, and TikTok.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-num">03</div>
+      <h3 class="service-title">Music Videos</h3>
+      <p class="service-desc">Creative music video edits with rhythm-driven cuts, colour grading, and visual storytelling that matches the mood of the track.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-num">04</div>
+      <h3 class="service-title">Short Documentaries</h3>
+      <p class="service-desc">Thoughtful, narrative-driven edits that let real stories unfold — paced with intention, cut with care.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-num">05</div>
+      <h3 class="service-title">Event Coverage</h3>
+      <p class="service-desc">Highlight reels and full edits for small events, gatherings, and occasions — capturing the energy and emotion of the day.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-num">06</div>
+      <h3 class="service-title">Highlight Reels</h3>
+      <p class="service-desc">Distilling hours of footage into a single, compelling reel — built to be felt in the first few seconds and remembered long after.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section class="process">
+  <div class="reveal">
+    <p class="section-label">How It Works</p>
+    <h2 class="section-title">The process</h2>
+  </div>
+  <div class="process-steps reveal">
+    <div class="process-step">
+      <div class="step-dot"></div>
+      <p class="step-num">Step 01</p>
+      <h3 class="step-title">Brief</h3>
+      <p class="step-desc">We talk about your vision, audience, and goals. You send across the raw footage and any references you love.</p>
+    </div>
+    <div class="process-step">
+      <div class="step-dot"></div>
+      <p class="step-num">Step 02</p>
+      <h3 class="step-title">First Cut</h3>
+      <p class="step-desc">I structure and cut the edit, focusing on pacing, narrative flow, and rhythm before applying any finishing touches.</p>
+    </div>
+    <div class="process-step">
+      <div class="step-dot"></div>
+      <p class="step-num">Step 03</p>
+      <h3 class="step-title">Revisions</h3>
+      <p class="step-desc">You review the edit and send feedback. We refine together until it feels exactly right — up to two rounds included.</p>
+    </div>
+    <div class="process-step">
+      <div class="step-dot"></div>
+      <p class="step-num">Step 04</p>
+      <h3 class="step-title">Delivery</h3>
+      <p class="step-desc">Final export delivered in your preferred format and resolution, ready to publish, screen, or share.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact" id="contact">
+  <p class="section-label">Get in Touch</p>
+  <h2 class="section-title">Let's work together.</h2>
+  <p class="contact-sub">Have a project in mind? Reach out on Instagram or drop an email — I'd love to hear about it.</p>
+  <div class="contact-links">
+    <a href="https://www.instagram.com/_indvzl_/" target="_blank" class="contact-link primary">
+      Instagram @INDVZL
+    </a>
+    <a href="mailto:topnoanuj21@gmail.com" class="contact-link secondary">
+      Email Me
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <span class="footer-logo">INDVZL</span>
+  <span>© 2025 INDVZL. All rights reserved.</span>
+  <span>Video Editor</span>
+</footer>
+
+<script>
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 80);
+        observer.unobserve(entry.target);
+
+      }
+    });
+  }, { threshold: 0.12 });
+  reveals.forEach(el => observer.observe(el));
+
+  function filterWork(btn, cat) {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.work-item').forEach(item => {
+      if (cat === 'all' || item.dataset.cat === cat) {
+        item.style.display = '';
+      } else {
+        item.style.display = 'none';
+      }
+    });
+  }
+</script>
+</body>
+</html>
