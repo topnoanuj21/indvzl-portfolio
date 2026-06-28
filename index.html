@@ -153,23 +153,31 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.75rem;
     color: var(--gray-mid);
-    font-size: 0.7rem;
-    letter-spacing: 0.15em;
+    font-size: 0.85rem;
+    letter-spacing: 0.35em;
     text-transform: uppercase;
+    font-weight: 600;
   }
 
-  .scroll-line {
-    width: 1px;
-    height: 40px;
-    background: linear-gradient(to bottom, var(--gray-mid), transparent);
-    animation: scrollAnim 2s ease-in-out infinite;
+  .scroll-arrow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    animation: bounceArrow 1.4s ease-in-out infinite;
   }
 
-  @keyframes scrollAnim {
-    0%, 100% { opacity: 0.3; transform: scaleY(1); }
-    50% { opacity: 1; transform: scaleY(1.2); }
+  .scroll-arrow svg {
+    width: 36px;
+    height: 36px;
+    color: var(--accent);
+    filter: drop-shadow(0 0 6px rgba(102,16,242,0.5));
+  }
+
+  @keyframes bounceArrow {
+    0%, 100% { transform: translateY(0); opacity: 1; }
+    50% { transform: translateY(10px); opacity: 0.6; }
   }
 
   /* SECTION SHARED */
@@ -654,15 +662,19 @@
 <section class="hero" style="padding:0;">
   <div class="hero-left">
     <p class="hero-tag">Video Editor & Storyteller</p>
-    <h1 class="hero-title">Frames that<br><em>move</em><br>people.</h1>
-    <p class="hero-sub">I don't just edit footage — I shape how it feels. Every cut is a choice, every frame has a reason. I work with raw moments and turn them into something that lingers — whether it's a two-minute promo or a ten-minute short film.</p>
+    <h1 class="hero-title">You shoot it,<br>I <em>shape</em> it.</h1>
+    <p class="hero-sub">I don't just trim footage — I shape how it feels. Every cut is a choice, every frame has a reason. I work with raw moments and turn them into something that lingers — whether it's a two-minute promo or a ten-minute short film.</p>
     <a href="#work" class="hero-cta">
       View Work
       <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </a>
     <div class="hero-scroll-hint">
       <span>Scroll</span>
-      <div class="scroll-line"></div>
+      <div class="scroll-arrow">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 5v14M5 13l7 7 7-7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
     </div>
   </div>
 </section>
@@ -676,7 +688,7 @@
     </div>
     <div class="work-filter">
       <button class="filter-btn active" onclick="filterWork(this,'all')">All</button>
-      <button class="filter-btn" onclick="filterWork(this,'commercial')">Cinematic</button>
+      <button class="filter-btn" onclick="filterWork(this,'commercial')">Documentary</button>
       <button class="filter-btn" onclick="filterWork(this,'social')">Podcast</button>
       <button class="filter-btn" onclick="filterWork(this,'events')">Events & Promos</button>
     </div>
@@ -686,12 +698,12 @@
     <!-- ROW 1: Landscape (span 2) + Vertical (span 1) -->
     <div class="work-item span2" data-cat="commercial">
       <div class="work-thumb" style="background:#0E0A1F;">
-        <iframe src="https://www.youtube.com/embed/3Tu7tWxtTfo?rel=0&modestbranding=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        <iframe src="https://www.youtube.com/embed/CiuWFx_7LRs?rel=0&modestbranding=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         <div class="thumb-cover" onclick="this.classList.add('clicked')"></div>
       </div>
       <div class="work-meta">
-        <p class="work-cat">Automotive</p>
-        <p class="work-name">Cinematic Edit</p>
+        <p class="work-cat">Documentary</p>
+        <p class="work-name">Short Documentary</p>
       </div>
     </div>
 
